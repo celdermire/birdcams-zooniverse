@@ -1,0 +1,11 @@
+##create subject set in project [PROJECT_NUMBER]
+panoptes subject-set create [PROJECT_NUMBER] "RedTailedHawks_PTZ_2018_06_02_08_54-2"
+
+##change directory to "testcut" directory with cut files and manifest
+cd ~/Desktop/testcut
+
+##point panoptes at the manifest and it will find associated files in that local directory and add them to subject set [SUBJECT_SET_NUMBER]
+panoptes subject-set upload-subjects [SUBJECT_SET_NUMBER] video_manifest.csv
+
+## removing subjects using a txt file with subject IDs from subject set; example shown with txt file in C:
+cat ids.txt | xargs panoptes subject-set remove-subjects [SUBJECT_SET_NUMBER]
