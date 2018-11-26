@@ -23,13 +23,3 @@ ffmpeg -i Desktop/RedTailedHawks_PTZ_2018_06_02_08_54.f4v -vf scale=640:480 -for
 
 ffmpeg -i Desktop/RedTailedHawks_PTZ_480_2018_06_02_08_54.mp4 -c copy -force_key_frames 1 -segment_time 10 -f segment -force_key_frames 1 -reset_timestamps 1 -segment_list manifest -segment_list_type csv Desktop/testcut/RedTailedHawks_PTZ_480_2018_06_02_08_54_%03d.mp4
 
-
-##create subject set in project 7174
-panoptes subject-set create 7174 "RedTailedHawks_PTZ_2018_06_02_08_54-2"
-
-##change directory to directory with cut files and manifest
-cd ~/Desktop/testcut
-
-##point panoptes at the manifest and it will find associated files in that local directory and add them to subject set 51600
-
-panoptes subject-set upload-subjects 51600 video_manifest.csv
