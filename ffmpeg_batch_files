@@ -10,3 +10,8 @@ pause
 
 for %%a in ("*.mp4") do ffmpeg -i "%%a" -c copy -force_key_frames 1 -segment_time 10 -f segment -force_key_frames 1 -reset_timestamps 1 -segment_list "%%a_manifest" -segment_list_type csv -y "\480splits\%%~na_%%03d.mp4"
 pause
+
+##ALTERING QUALITY 
+##individual subjects need to be <1MB for ingest in zooniverse; modifying the -crf argument when segmenting video changes compression and can help achieve lower filesize at the cost of reduced quality
+
+ffmpeg -i *.mp4 -force_key_frames "expr:gte(t,n_forced*2)" -vf scale=850:480 -pix_fmt yuv420p -crf 35 -segment_time 10 -f segment -reset_timestamps 1 -segment_list manifest -segment_list_type csv *%03d.mp4
