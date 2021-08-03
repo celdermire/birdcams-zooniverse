@@ -1,0 +1,26 @@
+##PREPARING VIDEO FILES FOR ZOONIVERSE INGEST
+##Purpose = transform longer recordings taken from networked video into shorter 10s clips that have to be under 1MB to be uploaded into Zooniverse.
+##All of the commands were executed via the command line in Ubuntu on Windows, or via batch files in Windows.  
+##There are three general commands we built to handle different recordings in different formats, durations, and qualities. All of our recordings had fluctuating flame rates because they were networked video; as FFMPEG uses keyframes to accurately segment recordings, we had to transcode or copy while forcing key frames to ensure consistent durations of the output segmented video clips. 
+##Because of the 1MB filesize for subjects constraint in zooniverse and the size of the data entry viewport for Zooniverse projects, there were three strategies for getting our subjects under that constraint: scaling to lower resolution, altering the compression, and choosing a segment size (in our case, it was 10s clips as we were trying to study bird behaviors). We also used batch files to process folders with thousands of longer duration recordings, but if you have fewer recordings you can manually apply each of these commands without using batch commands.
+##Scaling and segmenting can be combined in ffmpeg but we kept them separate in the batch files. We recommend starting on a relatively short file and checking that the output is optically clear enough for your data collection and under the 1MB file limit using the ALTERING QUALITY command as a template. Once you have good output, try on a longer file, and then to running batches.
+
+##ALTERING QUALITY USING -crf
+##individual subjects need to be <1MB for ingest in zooniverse; modifying the -crf argument when segmenting video changes compression and can help achieve lower filesize at the cost of reduced quality. Once desired filesize is output, use that -crf level for the batch command. Lower crf means higher quality/less compression. Range is 0 to 51. This command forces key frames, scales to 480, sets the -crf at 35, and creates 10s segments.
+
+ffmpeg -i *.mp4 -force_key_frames "expr:gte(t,n_forced*2)" -vf scale=850:480 -pix_fmt yuv420p -crf 35 -segment_time 10 -f segment -reset_timestamps 1 -segment_list manifest -segment_list_type csv *%03d.mp4
+
+##BATCH SCALING VIDEO FILES
+##Using ffmpeg on Ubuntu on windows to scale 1080p HD video to 480p and force key frames for even segmenting of networked video using batch files within directories
+##Transcodes to 480p and fixes key frame rate with force_key_frames
+##batch file is in folder with the files to be transcoded, output is on C:\
+
+for %%a in ("*.mp4") do ffmpeg -i "%%a" -vf scale=850:480 -pix_fmt yuv420p -crf 35 -force_key_frames "expr:gte(t,n_forced*2)" -y "\480s\480_%%~na.mp4"
+pause
+
+##BATCH SEGMENTING LONGER VIDEO FILES TO SHORTER CLIPS
+##batch file is IN the folder with video files to be segmented. There's no transcoding in this command, just segmenting. It outputs a set of consecutive 10s 480p .mp4 video files segmented from the original, longer video files. It also creates a populated manifest for zooniverse ingest (output file is on C:\ )
+
+for %%a in ("*.mp4") do ffmpeg -i "%%a" -c copy -force_key_frames 1 -segment_time 10 -f segment -force_key_frames 1 -reset_timestamps 1 -segment_list "%%a_manifest" -segment_list_type csv -y "\480splits\%%~na_%%03d.mp4"
+pause
+
