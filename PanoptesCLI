@@ -1,5 +1,5 @@
 ##create subject set in project [PROJECT_NUMBER]
-panoptes subject-set create [PROJECT_NUMBER] "RedTailedHawks_PTZ_2018_06_02_08_54-2"
+panoptes subject-set create [PROJECT_NUMBER] "Video-2"
 
 ##change directory to "testcut" directory with cut files and manifest
 cd ~/Desktop/testcut
