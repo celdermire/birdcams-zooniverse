@@ -1,7 +1,7 @@
 ##ffmpeg commands at https://ffmpeg.org/ffmpeg-formats.html
 
 ##Get info
-ffmpeg -i 2018CornellHawks.avi
+ffmpeg -i video.avi
 
 ##commands to split into segments
 
@@ -11,15 +11,15 @@ ffmpeg -i [NAME].mp4 -c copy -force_key_frames 1 -segment_time 10 -f segment -re
 
 ##scale to 480p (transcodes/creates audio file and smooth video from f4v file)
 
-ffmpeg -i 2018CornellHawks.f4v -vf scale=640:480 2018CornellHawks480.mp4 -hide_banner
+ffmpeg -i Video.f4v -vf scale=640:480 Video-480.mp4 -hide_banner
 
 
 
 ##example file transcode, forcing even key frames
 
-ffmpeg -i Desktop/RedTailedHawks_PTZ_2018_06_02_08_54.f4v -vf scale=640:480 -force_key_frames 'expr:gte(t,n_forced*2)' Desktop/RedTailedHawks_PTZ_480_2018_06_02_08_54.f4v.mp4 -hide_banner
+ffmpeg -i Desktop/Video.f4v -vf scale=640:480 -force_key_frames 'expr:gte(t,n_forced*2)' Desktop/Video.mp4 -hide_banner
 
 ##example file segmenting to 10s, forcing even key frames and creating manifest
 
-ffmpeg -i Desktop/RedTailedHawks_PTZ_480_2018_06_02_08_54.mp4 -c copy -force_key_frames 1 -segment_time 10 -f segment -force_key_frames 1 -reset_timestamps 1 -segment_list manifest -segment_list_type csv Desktop/testcut/RedTailedHawks_PTZ_480_2018_06_02_08_54_%03d.mp4
+ffmpeg -i Desktop/Video.mp4 -c copy -force_key_frames 1 -segment_time 10 -f segment -force_key_frames 1 -reset_timestamps 1 -segment_list manifest -segment_list_type csv Desktop/testcut/Video%03d.mp4
 
